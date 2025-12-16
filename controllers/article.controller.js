@@ -41,6 +41,7 @@ const getAllArticle = async (req, res, next) => {
     const skip = (page - 1)* limit;
 
     try {
+        console.log(req.user);
         const articles = await ArticleModel.find({})
             .sort({ createdAt: -1 })
             .limit(limit)

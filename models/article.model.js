@@ -13,8 +13,9 @@ const articleSchema = new mongoose.Schema(
             minlength: 20
         },
         author: {
-            type: String, 
-            default: 'Guest'
+            type: mongoose.Schema.Types.ObjectId, //form relationships in MongoDB
+            ref: 'User',
+            required: true
         },
     },
     {timestamps: true}   

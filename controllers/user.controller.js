@@ -1,7 +1,8 @@
-const userModel = require ('../models/user.model.js');
+require('dotenv').config();
 const Joi = require ('joi');
 const jwt = require ('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const userModel = require ('../models/user.model.js');
 
 const registerUser = async (req, res, next) =>{
 
@@ -80,13 +81,19 @@ const loginUser = async (req, res, next) => {
 
     const token = jwt.sign(
         {userId: user._id, name: user.name},
-        process.env.JWT_SECTRET,
+        process.env.JWT_SECRET,
         {expiresIn: '7d'}
     );
 
+    const resUser = {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+    };
+
     return res.status(200).json({
         message: "Login Successful",
-        user: user,
+        user: resUser,
         token
     });
     } catch (error) {

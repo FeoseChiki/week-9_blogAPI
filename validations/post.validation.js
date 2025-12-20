@@ -3,7 +3,6 @@ const Joi = require ('joi');
 const createArticleSchema = Joi.object({
     title: Joi.string().min(5).max(200).required().trim(),
     content: Joi.string().min(20).required(),
-    author: Joi.string().optional().default('Guest'),
 });
 
 const validateArticle = (req,res,next) => {
@@ -22,7 +21,6 @@ const validateArticle = (req,res,next) => {
 const updateArticleSchema = Joi.object({
     title: Joi.string().min(5).max(200).trim(),
     content: Joi.string().min(20).trim(),
-    author: Joi.string().trim(),
 });
 
 const validateUpdateArticle = (req,res,next) => {

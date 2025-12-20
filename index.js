@@ -1,6 +1,7 @@
-require ('dotenv').config();
+require('dotenv').config();
 
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const connectDB = require('./database/connectDB');
 const requestLogger = require('./middlewares/logger.js');
@@ -11,6 +12,7 @@ const userRoutes = require ('./routes/user.route.js');
 
 const app = express();
 const PORT = process.env.PORT
+const JWT_SECRET = process.env.JWT_SECRET
 
 connectDB();
 
@@ -26,7 +28,7 @@ app.use('/api/users/', userRoutes);
 
 app.use(errorHandler);
 
-
+console.log(JWT_SECRET);
 
 app.listen(PORT, () =>{
     console.log (`API is running on ${PORT}`)

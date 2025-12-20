@@ -3,25 +3,14 @@ const ArticleModel = require('../models/article.model.js');
 
 
 const postArticle = async (req, res, next) => {
-    const articleSchema = Joi.object({
-            title: Joi.string().min(5).required,
-            content: Joi.string().min(20).required,
-            author: Joi.string().min(5).optional().default('Guest')
-        });
-
-        const {error, value} = articleSchema.validate(req.body);
-
-        if(error) {
-            return res.status(400).json({
-                error,
-            });
-        }
-
+    
     try {
-    const {title, content} = value
+    
         const newArticle = new ArticleModel({
-            title,
-            content
+            
+            title: req.body.title,
+            content: req.body.content,
+            author: req.user._id,
         });
         await newArticle.save();
 
@@ -35,17 +24,13 @@ const postArticle = async (req, res, next) => {
         next(error);
     }
 };
-const getAllArticle = async (req, res, next) => {
-    const {limit = 10, page = 1 } = req.query;
-
-    const skip = (page - 1)* limit;
-
+const getAllArticles = async (req, res, next) => {
     try {
         console.log(req.user);
-        const articles = await ArticleModel.find({})
-            .sort({ createdAt: -1 })
-            .limit(limit)
-            .skip(skip);
+        const articles = await ArticleModel.find().populate(
+            "author", 
+            "name _id email"
+        );
 
         return res.status(200).json({
             message: "Articles successfully retrieved",
@@ -80,27 +65,18 @@ const getArticleById = async (req, res, next) => {
 };
 
 const updateArticleById = async (req, res, next) => {
-    const articleSchema = Joi.object({
-            title: Joi.string().min(5).optional(),
-            content: Joi.string().min(20).optional(),
-            author: Joi.string().min(5).optional()
-        });
-
-        const {error, value} = articleSchema.validate(req.body);
-        if(error) {
-            return res.status(400).json('Please provide article title and content')
-        }
-
-
     try {
-        const updatedArticle = await ArticleModel.findByIdAndUpdate(
-            req.params.id,
-            { ...req.body, updatedAt: new Date() },
-            { new: true, runValidators: true }
+        const updatedArticle = await ArticleModel.findOneAndUpdate(
+            { _id: req.params.id, author: req.user._id },
+            { ...req.body },
+            { 
+                new: true, 
+                runValidators: true, 
+            }
         );
 
         if (!updatedArticle) {             
-            return res.status(404).json({error:'Not found'});
+            return res.status(404).json({error:' Article Not found'});
             res.json(article);
         }
 
@@ -115,8 +91,11 @@ const updateArticleById = async (req, res, next) => {
 
 const deleteArticleById = async (req, res, next) => {
     try {
-        const article = await ArticleModel.findByIdAndDelete(req.params.id);
-
+        const article = await ArticleModel.findOneAndDelete({
+            _id: req.params._id,
+            author: req.user._id,
+        });
+        
         if(!article) {
             return res.status(404).json({
                 message: 'Article not found'
@@ -134,7 +113,7 @@ const deleteArticleById = async (req, res, next) => {
 
 module.exports = {
     postArticle,
-    getAllArticle,
+    getAllArticles,
     getArticleById,
     updateArticleById,
     deleteArticleById

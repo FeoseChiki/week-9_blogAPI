@@ -18,14 +18,16 @@ const requireOwnership = require('../middlewares/requireOwnership.js');
 
 const router = express.Router();
 
-router.post('/articles', validateArticle, requireAuth, postArticle);
+//router.use(requireAuth);
 
-router.get('/articles', requireAuth, getAllArticles);
+router.post('/articles', validateArticle, postArticle);
 
-router.get('/articles/:id', requireAuth, getArticleById);
+router.get('/articles', getAllArticles);
 
-router.put('/articles/:id', validateUpdateArticle, requireAuth, updateArticleById);
+router.get('/articles/:id', getArticleById);
 
-router.delete('/articles/:id', requireAuth, deleteArticleById);
+router.put('/articles/:id', validateUpdateArticle, updateArticleById);
+
+router.delete('/articles/:id', deleteArticleById);
 
 module.exports = router;

@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const validateEnv = require('../src/validations/validateEnv.js');
+
 const express = require('express');
 const cors = require('cors');
 const requestLogger = require('./middlewares/logger.js');
@@ -7,6 +9,9 @@ const errorHandler = require('./middlewares/errorHandler.js');
 
 const articleRoutes = require('./routes/article.routes.js');
 const userRoutes = require ('./routes/user.route.js');
+
+
+validateEnv();
 
 const app = express();
 

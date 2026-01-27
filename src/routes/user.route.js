@@ -3,11 +3,15 @@ const {
     registerUser,
     loginUser
 } = require('../controllers/user.controller.js');
+const {
+    validateLogin,
+    validateRegister
+} = require('../validations/user.validations.js');
 
 const router = express.Router();
 
-router.post('/sign-up', registerUser );
+router.post('/sign-up', validateRegister, registerUser );
 
-router.post('/login', loginUser );
+router.post('/login', validateLogin, loginUser );
 
 module.exports = router;

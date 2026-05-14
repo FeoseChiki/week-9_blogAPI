@@ -21,6 +21,15 @@ app.use(cors('*'));
 
 app.use(requestLogger);
 
+app.post("/upload", (req, res) =>{
+
+    console.log('body', req.body)
+    console.log('file', req.file)
+
+
+    res.send('Hello, from upload')
+});
+
 app.use('/api', articleRoutes);
 app.use('/api/users/', userRoutes);
 

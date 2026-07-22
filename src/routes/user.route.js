@@ -13,9 +13,16 @@ const {
 
 const upload = require('../middlewares/upload.js');
 
-const router = express.Router();
+const router = express.Router(); 
 
-router.post('/upload', upload.single('image'), (req, res) => {
+router.post('/upload', upload.single('image'), async (req, res) => {
+
+    console.log('REQ.FILE:', req.file);
+    console.log('REQ.BODY:', req.body);
+
+    if(!req.file) {
+    return res.status(400).send("No file was uploaded")
+}
 
     const fileURL = req.file.path;
     const fileName = req.file.filename;

@@ -21,6 +21,10 @@ app.use(cors('*'));
 
 app.use(requestLogger);
 
+app.get('/', (req, res) => {
+    res.send ("Blog API is running successfully");
+});
+
 app.post("/upload", (req, res) =>{
 
     console.log('body', req.body)
